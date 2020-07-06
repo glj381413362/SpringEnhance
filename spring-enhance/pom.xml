@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.3.1.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>com.enhance</groupId>
+  <artifactId>spring-enhance</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>springToEnhance</name>
+  <description>Demo project for Spring Boot</description>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <build.encoding>UTF-8</build.encoding>
+    <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.common</groupId>
+      <artifactId>java-tools</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.enhance</groupId>
+      <artifactId>log-plugin</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>5.0.10.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web-services</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>5.1.10</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.5.21</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>2.0.1.Final</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <resources>
+      <!--这里的设置是为了把 src/main/resources里面的文件打包到jar中 -->
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <targetPath>../classes</targetPath>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+            <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+            <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+            <nonFilteredFileExtension>ttc</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
+          <encoding>${build.encoding}</encoding>
+          <resources>
+            <!-- 打包配置文件等到jar包中 排除yml-->
+            <resource>
+              <directory>src/main/resources</directory>
+              <filtering>true</filtering>
+              <excludes>
+                <exclude>*.yml</exclude>
+              </excludes>
+            </resource>
+            <!-- 打包部署elk stack 日志框架配置文件到 elk 文件夹-->
+            <resource>
+              <directory>nodes-stand-alone</directory>
+              <filtering>true</filtering>
+              <includes>
+                <include>*.yml</include>
+                <include>*.sh</include>
+              </includes>
+              <targetPath>${project.build.directory}/elk</targetPath>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>${build.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <!--打包命令 mvn install/deploy -Pdefault -Dmaven.test.skip=true -->
+    <profile>
+      <id>default</id>
+      <properties>
+        <SNAPSHOT.version>1.0-SNAPSHOT</SNAPSHOT.version>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault><!-- 默认激活该profile节点-->
+      </activation>
+    </profile>
+    <profile>
+      <!-- 测试环境 -->
+      <id>sit</id>
+      <properties>
+        <SNAPSHOT.version>SIT-1.0-SNAPSHOT</SNAPSHOT.version>
+      </properties>
+    </profile>
+    <profile>
+      <!-- uat环境 -->
+      <id>uat</id>
+      <properties>
+        <SNAPSHOT.version>1.0-SNAPSHOT</SNAPSHOT.version>
+      </properties>
+    </profile>
+    <profile>
+      <!-- 生产环境 -->
+      <id>prod</id>
+      <properties>
+        <SNAPSHOT.version>1.0-SNAPSHOT</SNAPSHOT.version>
+      </properties>
+    </profile>
+  </profiles>
+
+</project>

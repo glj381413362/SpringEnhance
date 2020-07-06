@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.enhance.spring.config.HelperAutoConfiguration,\
+com.enhance.spring.config.SpringEnhanceAutoConfiguration

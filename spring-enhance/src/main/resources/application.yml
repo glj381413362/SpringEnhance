@@ -1,0 +1,11 @@
+plugin:
+  spring:
+    response:
+      multilingual: false
+      print-stack-profiles:
+      - dev
+      - uat
+      - sit
+      - test
+      support-class-prefix:
+      - com.glj.demo
