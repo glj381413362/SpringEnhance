@@ -41,9 +41,6 @@ logging:
 
 plugin:
   spring:
-    supportsClass: com.enhance.logplugin.demo
-    multilingual: false
-    printStackProfile: dev,uat,sit,test
     response:
       multilingual: true
       print-stack-profiles:

@@ -9,7 +9,7 @@ import lombok.Data;
  * @author gongliangjun 2020/06/14 4:51 PM
  */
 @Data
-public class PageResponse extends Result {
+public class PageResponse<T> extends Result {
 
   private Integer totalPages;
   private Long totalElements;

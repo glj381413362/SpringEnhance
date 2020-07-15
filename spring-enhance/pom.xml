@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.enhance</groupId>
   <artifactId>spring-enhance</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1.RELEASE</version>
   <name>springToEnhance</name>
   <description>Demo project for Spring Boot</description>
 

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.pagehelper.PageInfo;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -174,6 +174,17 @@ public class Res<T> extends Result<T> {
     }
   }
 
+  public void add2Failed(Object dto, String failedMsg) {
+    ResDTO<Object> resDto = ResDTO.builder().msg(failedMsg).resDto(dto).build();
+    if (CollectionUtils.isNotEmpty(this.partialFailed)) {
+      this.partialFailed.add(resDto);
+    } else {
+      List<Object> partialFailed = new ArrayList<>();
+      partialFailed.add(resDto);
+      this.partialFailed = partialFailed;
+    }
+  }
+
   public void add2Failed(Object object) {
     if (CollectionUtils.isNotEmpty(this.partialFailed)) {
       this.partialFailed.add(object);
@@ -220,5 +231,15 @@ public class Res<T> extends Result<T> {
 
   public boolean isHasBeenBuild() {
     return hasBeenBuild;
+  }
+
+  //批量操作时的返回对象
+
+  @Data
+  @lombok.Builder
+  public static class ResDTO<T>{
+    private T resDto;
+    private String msg;
+
   }
 }
