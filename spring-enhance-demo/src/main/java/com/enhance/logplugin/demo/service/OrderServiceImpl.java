@@ -1,8 +1,11 @@
 package com.enhance.logplugin.demo.service;
 
+import static com.enhance.logplugin.demo.exception.OrderExceptionAssert.ORDER_NOT_FOUND;
+
 import com.common.tools.util.BeanUtil;
 import com.common.tools.util.ListUtil;
 import com.common.tools.util.exception.BaseException;
+import com.common.tools.util.exception.BusinessExceptionAssert;
 import com.common.tools.util.exception.Msg;
 import com.enhance.annotations.EnableProfiler;
 import com.enhance.annotations.Log;
@@ -20,6 +23,8 @@ import com.enhance.logplugin.demo.entity.Order;
 import com.enhance.logplugin.demo.entity.OrderEntry;
 import com.enhance.logplugin.demo.entity.Sku;
 import com.enhance.logplugin.demo.entity.User;
+import com.enhance.logplugin.demo.exception.OrderExceptionAssert;
+import com.enhance.logplugin.demo.exception.UserExceptionAssert;
 import com.enhance.logplugin.demo.util.SleepUtil;
 import com.enhance.spring.aop.AopProxy;
 import com.enhance.spring.config.properties.SpringResponseProperty;
@@ -66,6 +71,48 @@ public class OrderServiceImpl implements AopProxy<OrderService>, OrderService {
     List<String> printStackProfiles = springResponseProperty.getPrintStackProfiles();
     List<Order> orders = orderMapper.findAll(Example.of(order));
     return orders;
+  }
+  public void testExceptionAssert(Long userCode,Long orderId) {
+    Order order = orderMapper.getOne(orderId);
+    if (order == null) {
+      throw new BaseException(Msg.of("根据orderId[{}]未查询到订单"),orderId);
+    }
+    Order order2 = orderMapper.getOne(orderId);
+    if (order2 == null) {
+      OrderExceptionAssert.ORDER_NOT_FOUND.throwE();
+    }
+
+    Order order3 = null;
+    try {
+      order3 = orderMapper.getOne(orderId);
+    } catch (Exception e) {
+      OrderExceptionAssert.ORDER_NOT_FOUND.throwE(e,"根据orderId[{}]查询订单异常",orderId);
+    }
+
+
+    User user = userMapper.getOne(userCode);
+    if (user == null) {
+      throw new BaseException(Msg.of("根据userCode[{}]未查询到用户"),userCode);
+    }
+    Order order4 = orderMapper.getOne(orderId);
+    ORDER_NOT_FOUND.assertNotNull(order,"根据orderId[{}]未查询到订单",orderId);
+
+
+    User user1 = userMapper.getOne(userCode);
+    UserExceptionAssert.USER_NOT_FOUND.assertNotNull(user,"根据userCode[{}]未查询到用户",userCode);
+
+
+    if (1==1){
+      throw new BaseException("我错了");
+    }
+    if (1==1){
+      throw new BaseException(Msg.of("学生:{}错了"),"student001");
+    }
+    try{
+      // 业务
+    }catch (Exception e){
+      throw new BaseException(e,"学生:{}错了","student001");
+    }
   }
 
 
