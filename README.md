@@ -1,6 +1,6 @@
 # 异常帮助类
 
-![image-20200720233646282](/Users/gongliangjun/Library/Application Support/typora-user-images/image-20200720233646282.png)
+![image-20200720233646282](https://user-images.githubusercontent.com/19701761/98550907-a36bdc00-22d7-11eb-9675-d8b876bc1d74.png)
 
 ## 普通抛出异常
 
